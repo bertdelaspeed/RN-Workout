@@ -7,7 +7,7 @@ export function formatSec(sec: number) {
   const _sec = sec % 60;
 
   return `${_min > 0 ? _min + " min" : ""} ${_sec && _min > 0 ? "and" : ""} ${
-    _sec > 0 ? _sec + " sec" : ""
+    _sec > 0 ? _sec + " sec" : " --"
   } 
   `;
 }
