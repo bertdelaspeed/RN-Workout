@@ -1,21 +1,21 @@
 import { useEffect, useState, useRef } from "react";
 
-export function useCountDown(idx: number, initialCount: number) {
+export function useCountDown(idx: number, initialCount: number = -1) {
   const [countDown, setCountDown] = useState(initialCount);
   const intervalRef = useRef<number>();
+  const [isRunning, setIsRunning] = useState(false);
 
   useEffect(() => {
     if (idx == -1) return;
-
-    intervalRef.current = window.setInterval(() => {
-      setCountDown((count) => {
-        console.log(count);
-
-        return count - 1;
-      });
-      return cleanup;
-    }, 20);
-  }, [idx]);
+    if (isRunning && !intervalRef.current) {
+      intervalRef.current = window.setInterval(() => {
+        setCountDown((count) => {
+          return count - 1;
+        });
+      }, 20);
+    }
+    return cleanup;
+  }, [idx, isRunning]);
 
   useEffect(() => {
     setCountDown(initialCount);
@@ -29,10 +29,19 @@ export function useCountDown(idx: number, initialCount: number) {
 
   const cleanup = () => {
     if (intervalRef.current) {
+      setIsRunning(false);
       window.clearInterval(intervalRef.current);
       intervalRef.current = undefined;
     }
   };
 
-  return countDown;
+  return {
+    countDown,
+    isRunning,
+    stop: cleanup,
+    start: (count?: number) => {
+      setCountDown(count ?? initialCount);
+      setIsRunning(true);
+    },
+  };
 }
