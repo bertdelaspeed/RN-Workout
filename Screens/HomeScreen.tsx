@@ -3,13 +3,14 @@ import React from "react";
 import { NativeStackHeaderProps } from "@react-navigation/native-stack";
 import WorkoutItem from "../components/WorkoutItem";
 import { useWorkouts } from "../hooks/useWorkouts";
+import { ThemeText } from "../components/styled/Text";
 
 const HomeScreen = ({ navigation }: NativeStackHeaderProps) => {
   const workouts = useWorkouts();
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>New Workouts</Text>
+      <ThemeText style={styles.header}>New Workouts</ThemeText>
       <FlatList
         data={workouts}
         keyExtractor={(item) => item.slug}

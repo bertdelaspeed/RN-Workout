@@ -10,11 +10,22 @@ import PressableText from "../PressableText";
 
 type ModalProps = {
   activator?: FunctionComponent<{ handleOpen: () => void }>;
-  children?: React.ReactNode;
+  children: FunctionComponent<{
+    handleOpen: () => void;
+    handleClose: () => void;
+  }>;
 };
 
 const Modal = ({ activator: Activator, children }: ModalProps) => {
   const [isModalVisible, setModalVisible] = useState(false);
+
+  const handleOpen = () => {
+    setModalVisible(true);
+  };
+  const handleClose = () => {
+    setModalVisible(false);
+  };
+
   return (
     <>
       <ReactModal
@@ -23,15 +34,17 @@ const Modal = ({ activator: Activator, children }: ModalProps) => {
         animationType={"fade"}
       >
         <View style={styles.centerView}>
-          <View style={styles.closeView}>{children}</View>
+          <View style={styles.closeView}>
+            {children({ handleOpen, handleClose })}
+          </View>
 
-          <PressableText onPress={() => setModalVisible(false)} text="close" />
+          <PressableText onPress={handleClose} text="close" />
         </View>
       </ReactModal>
       {Activator ? (
-        <Activator handleOpen={() => setModalVisible(true)} />
+        <Activator handleOpen={handleOpen} />
       ) : (
-        <PressableText onPress={() => setModalVisible(true)} text="Open" />
+        <PressableText onPress={handleOpen} text="Open" />
       )}
     </>
   );
